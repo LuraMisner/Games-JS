@@ -10,6 +10,9 @@ const timeDisplay = document.querySelector('#time-left')
 const width = 9
 
 let currentIndex = 76
+let currentTime = 20
+let movement
+let outcomeTimer
 
 function moveFrog(e) {
     squares[currentIndex].classList.remove('frog')
@@ -40,13 +43,19 @@ function moveFrog(e) {
     squares[currentIndex].classList.add('frog')
 }
 
-document.addEventListener('keyup', moveFrog)
-
 function autoMoveElements() {
+    currentTime -= 1
+    timeDisplay.textContent = currentTime
+
     logsLeft.forEach(logLeft => moveLogLeft(logLeft))
     logsRight.forEach(logRight => moveLogRight(logRight))
     carsLeft.forEach(carLeft => moveCarLeft(carLeft))
     carsRight.forEach(carRight => moveCarRight(carRight))
+}
+
+function checkConditions() {
+    win()
+    lose()
 }
 
 
@@ -134,5 +143,38 @@ function moveCarRight(carRight) {
     }
 }
 
+function lose() {
+    if (squares[currentIndex].classList.contains('c1') || 
+    squares[currentIndex].classList.contains('l4') || 
+    squares[currentIndex].classList.contains('l5') || 
+    currentTime <= 0) {
+        resultDisplay.textContent = 'You lose!'
+        clearInterval(movement)
+        clearInterval(outcomeTimer)
+        squares[currentIndex].classList.remove('frog')
+        document.removeEventListener('keyup', moveFrog)
+    }
+}
 
-setInterval(autoMoveElements, 1000)
+function win() {
+    if (squares[currentIndex].classList.contains('ending-block')) {
+        resultDisplay.textContent = 'You win!'
+        clearInterval(movement)
+        clearInterval(outcomeTimer)
+        document.removeEventListener('keyup', moveFrog)
+    }
+}
+
+startPauseButton.addEventListener('click',  () => {
+    if (movement) {
+        clearInterval(movement)
+        clearInterval(outcomeTimer)
+        outcomeTimer = null
+        movement = null
+        document.removeEventListener('keyup', moveFrog)
+    } else {
+        movement = setInterval(autoMoveElements, 1000)
+        outcomeTimer = setInterval(checkConditions, 50)
+        document.addEventListener('keyup', moveFrog)
+    }
+})
