@@ -24,7 +24,7 @@
 } */
 
 .car-left, .car-right {
-    background-color: lightgrey;
+    background-color: lightgray;
 }
 
 .frog {
@@ -37,4 +37,12 @@
 
 .l4, .l5 {
     background-color: lightblue;
+}
+
+.c1 {
+    background-color:  darkblue;
+}
+
+.c2, .c3 {
+    background-color: lightgray;
 }
